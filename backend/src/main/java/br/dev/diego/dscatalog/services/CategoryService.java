@@ -1,11 +1,13 @@
 package br.dev.diego.dscatalog.services;
 
 import br.dev.diego.dscatalog.controllers.dto.CategoryDto;
+import br.dev.diego.dscatalog.entities.Category;
 import br.dev.diego.dscatalog.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,4 +22,9 @@ public class CategoryService {
         return repository.findAll().stream().map(CategoryDto::new).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public CategoryDto findById(Long id) {
+        return new CategoryDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "Categoria não encontrada id: " + id + " entity: " + Category.class.getName())));
+    }
 }
