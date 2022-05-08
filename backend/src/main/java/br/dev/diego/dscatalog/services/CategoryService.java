@@ -43,7 +43,6 @@ public class CategoryService {
         return new CategoryDto(cat);
     }
 
-    @Transactional
     public void deleteById(Long id) {
         try{
             repository.deleteById(id);
