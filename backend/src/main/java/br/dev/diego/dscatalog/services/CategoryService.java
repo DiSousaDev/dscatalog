@@ -1,6 +1,7 @@
 package br.dev.diego.dscatalog.services;
 
 import br.dev.diego.dscatalog.controllers.dto.CategoryDto;
+import br.dev.diego.dscatalog.controllers.dto.CategoryInsertDto;
 import br.dev.diego.dscatalog.entities.Category;
 import br.dev.diego.dscatalog.repositories.CategoryRepository;
 import br.dev.diego.dscatalog.services.exceptions.DataNotFoundException;
@@ -27,4 +28,11 @@ public class CategoryService {
         return new CategoryDto(repository.findById(id).orElseThrow(() -> new DataNotFoundException(
                 "Categoria não encontrada id: " + id + " entity: " + Category.class.getName())));
     }
+
+    @Transactional
+    public CategoryDto save(CategoryInsertDto category) {
+        return new CategoryDto(repository.save(new Category(null, category.getName())));
+    }
+
+
 }
