@@ -10,11 +10,10 @@ import br.dev.diego.dscatalog.services.exceptions.DatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -23,8 +22,8 @@ public class CategoryService {
     CategoryRepository repository;
 
     @Transactional(readOnly = true)
-    public List<CategoryDto> findAll() {
-        return repository.findAll().stream().map(CategoryDto::new).collect(Collectors.toList());
+    public Page<CategoryDto> findAllPaged(Pageable pageable) {
+        return repository.findAll(pageable).map(CategoryDto::new);
     }
 
     @Transactional(readOnly = true)
