@@ -6,7 +6,10 @@ import br.dev.diego.dscatalog.controllers.dto.CategoryUpdateDto;
 import br.dev.diego.dscatalog.entities.Category;
 import br.dev.diego.dscatalog.repositories.CategoryRepository;
 import br.dev.diego.dscatalog.services.exceptions.DataNotFoundException;
+import br.dev.diego.dscatalog.services.exceptions.DatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +46,14 @@ public class CategoryService {
 
     @Transactional
     public void deleteById(Long id) {
-        Category cat = findCategoryById(id);
-        repository.delete(cat);
+        try{
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new DataNotFoundException("Categoria não encontrada id: " + id + " entity: " + Category.class.getName());
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Impossivel excluir. Possui entidades relacionadas id: " + id + " entity: " + Category.class.getName());
+        }
+
     }
 
     private Category findCategoryById(Long id) {
