@@ -2,6 +2,7 @@ package br.dev.diego.dscatalog.services;
 
 import br.dev.diego.dscatalog.controllers.dto.CategoryDto;
 import br.dev.diego.dscatalog.controllers.dto.CategoryInsertDto;
+import br.dev.diego.dscatalog.controllers.dto.CategoryUpdateDto;
 import br.dev.diego.dscatalog.entities.Category;
 import br.dev.diego.dscatalog.repositories.CategoryRepository;
 import br.dev.diego.dscatalog.services.exceptions.DataNotFoundException;
@@ -25,8 +26,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDto findById(Long id) {
-        return new CategoryDto(repository.findById(id).orElseThrow(() -> new DataNotFoundException(
-                "Categoria não encontrada id: " + id + " entity: " + Category.class.getName())));
+        return new CategoryDto(findCategoryById(id));
     }
 
     @Transactional
@@ -34,5 +34,26 @@ public class CategoryService {
         return new CategoryDto(repository.save(new Category(null, category.getName())));
     }
 
+    @Transactional
+    public CategoryDto update(Long id, CategoryUpdateDto category) {
+        Category cat = findCategoryById(id);
+        updateCategory(cat, category);
+        return new CategoryDto(cat);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        Category cat = findCategoryById(id);
+        repository.delete(cat);
+    }
+
+    private Category findCategoryById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new DataNotFoundException(
+                "Categoria não encontrada id: " + id + " entity: " + Category.class.getName()));
+    }
+
+    private void updateCategory(Category cat, CategoryUpdateDto catUpdate) {
+        cat.setName(catUpdate.getName());
+    }
 
 }
