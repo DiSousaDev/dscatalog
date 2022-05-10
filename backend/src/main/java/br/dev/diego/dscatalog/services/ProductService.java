@@ -46,7 +46,7 @@ public class ProductService {
     public ProductDto update(Long id, ProductUpdateDto productUpdateDto) {
         Product prod = findProductById(id);
         copyDtoToEntity(productUpdateDto, prod);
-        return new ProductDto(prod);
+        return new ProductDto(repository.save(prod));
     }
 
     public void deleteById(Long id) {
