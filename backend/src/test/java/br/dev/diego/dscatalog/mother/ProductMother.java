@@ -1,6 +1,7 @@
 package br.dev.diego.dscatalog.mother;
 
 import br.dev.diego.dscatalog.controllers.dto.ProductDto;
+import br.dev.diego.dscatalog.controllers.dto.ProductInsertDto;
 import br.dev.diego.dscatalog.controllers.dto.ProductUpdateDto;
 import br.dev.diego.dscatalog.entities.Category;
 import br.dev.diego.dscatalog.entities.Product;
@@ -29,12 +30,16 @@ public class ProductMother {
 
     public static ProductDto getProductDto() {
         Product product = getNewProduct();
+        product.setId(1L);
         return new ProductDto(product, product.getCategories());
     }
 
     public static ProductUpdateDto getProductUpdatedDto() {
-        ProductUpdateDto productUpdateDto = new ProductUpdateDto(1L, "Prod Atualizado", "Desc Atualizada", 9.99, "Img atualizada", Instant.now());
-        return productUpdateDto;
+        return new ProductUpdateDto(1L, "Prod Atualizado", "Desc Atualizada", 9.99, "Img atualizada", Instant.now());
+    }
+
+    public static ProductInsertDto getProductInsertDto () {
+        return new ProductInsertDto(1L, "Prod Criado", "Desc Criada", 9.99, "Img Criada", Instant.now());
     }
 
 }
