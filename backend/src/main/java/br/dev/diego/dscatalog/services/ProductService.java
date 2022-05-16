@@ -73,7 +73,7 @@ public class ProductService {
         product.setDate(productDto.getDate());
 
         product.getCategories().clear();
-        product.getCategories().addAll(productDto.getCategories().stream().map(categoryDto -> new Category(categoryDto.getId(), null)).collect(Collectors.toList()));
+        product.getCategories().addAll(productDto.getCategories().stream().map(categoryDto -> new Category(categoryDto.getId())).collect(Collectors.toList()));
 
     }
 
