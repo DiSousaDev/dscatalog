@@ -2,17 +2,23 @@ package br.dev.diego.dscatalog.controllers.dto;
 
 import br.dev.diego.dscatalog.entities.User;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserDto {
 
     private Long id;
+
+    @NotBlank(message = "Campo obrigatório.")
     private String firstName;
     private String lastName;
+
+    @Email(message = "E-mail inválido.")
     private String email;
 
-    private Set<RoleDto> roles = new HashSet<>();
+    private final Set<RoleDto> roles = new HashSet<>();
 
     public UserDto() {
     }

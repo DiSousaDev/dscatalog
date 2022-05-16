@@ -3,6 +3,10 @@ package br.dev.diego.dscatalog.controllers.dto;
 import br.dev.diego.dscatalog.entities.Category;
 import br.dev.diego.dscatalog.entities.Product;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +16,19 @@ import java.util.stream.Collectors;
 public class ProductDto {
 
     private Long id;
+
+    @Size(min =  3, max = 60, message = "O campo nome deve ter entre {min} e {max} caracteres.")
+    @NotBlank(message = "Campo obrigatório.")
     private String name;
+
+    @NotBlank(message = "Campo obrigatório.")
     private String description;
+
+    @Positive(message = "O Preço deve ser positivo.")
     private Double price;
     private String imgUrl;
+
+    @PastOrPresent(message = "A data do produto não pode ser futura.")
     private Instant date;
     private List<CategoryDto> categories = new ArrayList<>();
 
