@@ -8,17 +8,26 @@ import br.dev.diego.dscatalog.repositories.RoleRepository;
 import br.dev.diego.dscatalog.repositories.UserRepository;
 import br.dev.diego.dscatalog.services.exceptions.DataNotFoundException;
 import br.dev.diego.dscatalog.services.exceptions.DatabaseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     UserRepository repository;
@@ -28,6 +37,18 @@ public class UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        Optional<User> user = repository.findByEmail(email);
+
+        if(user.isEmpty()) {
+            logger.error("User not found: " + email);
+            throw new UsernameNotFoundException("Email not found.");
+        }
+        logger.info("User found: " + user);
+        return user.get();
+    }
 
     @Transactional(readOnly = true)
     public Page<UserDto> findAllPaged(Pageable pageable) {
