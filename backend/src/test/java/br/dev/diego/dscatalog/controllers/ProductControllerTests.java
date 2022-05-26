@@ -7,11 +7,14 @@ import br.dev.diego.dscatalog.mother.ProductMother;
 import br.dev.diego.dscatalog.services.ProductService;
 import br.dev.diego.dscatalog.services.exceptions.DataNotFoundException;
 import br.dev.diego.dscatalog.services.exceptions.DatabaseException;
+import br.dev.diego.dscatalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +33,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class ProductControllerTests {
 
     @Autowired
@@ -42,6 +46,9 @@ class ProductControllerTests {
     @MockBean
     private ProductService service;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private ProductDto productDto;
     private ProductUpdateDto productUpdateDto;
     private ProductInsertDto productInsertDto;
@@ -49,6 +56,8 @@ class ProductControllerTests {
     private long existingId;
     private long nonExistingId;
     private long productWithEntity;
+    private String username;
+    private String password;
 
     @BeforeEach
     void setUp() {
@@ -60,8 +69,10 @@ class ProductControllerTests {
         existingId = 1L;
         nonExistingId = 1000L;
         productWithEntity = 2L;
+        username = "maria@gmail.com";
+        password = "123456";
 
-        when(service.findAllPaged(any(Pageable.class))).thenReturn(page);
+        when(service.findAllPaged(any(), any(), any(Pageable.class))).thenReturn(page);
         when(service.findById(existingId)).thenReturn(productDto);
         when(service.findById(nonExistingId)).thenThrow(DataNotFoundException.class);
 
@@ -78,10 +89,13 @@ class ProductControllerTests {
 
     @Test
     void saveShouldReturnProductDtoCreated() throws Exception {
-        String jsonBody = objectMapper.writeValueAsString(productInsertDto);
 
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+
+        String jsonBody = objectMapper.writeValueAsString(productInsertDto);
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/products")
                 .content(jsonBody)
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -94,10 +108,12 @@ class ProductControllerTests {
     @Test
     void updateShouldReturnProductDtoWhenIdExists() throws Exception {
 
-        String jsonBody = objectMapper.writeValueAsString(productUpdateDto);
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 
+        String jsonBody = objectMapper.writeValueAsString(productUpdateDto);
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/products/{id}", existingId)
                         .content(jsonBody)
+                        .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
 
@@ -110,10 +126,12 @@ class ProductControllerTests {
     @Test
     void updateShouldReturnNotFoundWhenIdDoesntExists() throws Exception {
 
-        String jsonBody = objectMapper.writeValueAsString(productUpdateDto);
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 
+        String jsonBody = objectMapper.writeValueAsString(productUpdateDto);
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/products/{id}", nonExistingId)
                 .content(jsonBody)
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
@@ -152,7 +170,10 @@ class ProductControllerTests {
     @Test
     void deleteShouldReturnNoContentWhenIdExists() throws Exception {
 
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.delete("/products/{id}", existingId)
+                .header("Authorization", "Bearer " + accessToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isNoContent());
@@ -162,7 +183,10 @@ class ProductControllerTests {
     @Test
     void deleteShouldReturnNotFoundWhenIdDoesntExists() throws Exception {
 
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.delete("/products/{id}", nonExistingId)
+                .header("Authorization", "Bearer " + accessToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isNotFound());
@@ -172,7 +196,10 @@ class ProductControllerTests {
     @Test
     void deleteShouldReturnBadRequestWhenIdHasEntityAssociated() throws Exception {
 
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.delete("/products/{id}", productWithEntity)
+                .header("Authorization", "Bearer " + accessToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isBadRequest());

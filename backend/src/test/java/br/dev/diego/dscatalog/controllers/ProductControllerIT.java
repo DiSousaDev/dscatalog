@@ -2,6 +2,7 @@ package br.dev.diego.dscatalog.controllers;
 
 import br.dev.diego.dscatalog.controllers.dto.ProductUpdateDto;
 import br.dev.diego.dscatalog.mother.ProductMother;
+import br.dev.diego.dscatalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,10 +30,15 @@ class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private Long existingId;
     private Long nonExistingId;
     private Long countTotalProducts;
     private ProductUpdateDto productUpdateDto;
+    private String username;
+    private String password;
 
     @BeforeEach
     void setUp() {
@@ -39,10 +46,14 @@ class ProductControllerIT {
         nonExistingId= 1000L;
         countTotalProducts= 25L;
         productUpdateDto = ProductMother.getProductUpdatedDto();
+        username = "maria@gmail.com";
+        password = "123456";
     }
 
     @Test
     void updateShouldReturnProductDtoWhenIdExists() throws Exception {
+
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 
         String jsonBody = objectMapper.writeValueAsString(productUpdateDto);
         String expectedName = productUpdateDto.getName();
@@ -51,6 +62,7 @@ class ProductControllerIT {
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/products/{id}", existingId)
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + accessToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk());
@@ -62,11 +74,13 @@ class ProductControllerIT {
     @Test
     void updateShouldReturnNotFoundWhenIdDoesntExists() throws Exception {
 
-        String jsonBody = objectMapper.writeValueAsString(productUpdateDto);
+        String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 
+        String jsonBody = objectMapper.writeValueAsString(productUpdateDto);
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/products/{id}", nonExistingId)
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + accessToken)
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isNotFound());

@@ -1,8 +1,6 @@
 package br.dev.diego.dscatalog.services;
 
 import br.dev.diego.dscatalog.controllers.dto.ProductDto;
-import br.dev.diego.dscatalog.controllers.dto.ProductInsertDto;
-import br.dev.diego.dscatalog.controllers.dto.ProductUpdateDto;
 import br.dev.diego.dscatalog.entities.Product;
 import br.dev.diego.dscatalog.mother.ProductMother;
 import br.dev.diego.dscatalog.repositories.ProductRepository;
@@ -61,6 +59,7 @@ class ProductServiceTests {
         when(productRepository.save(any())).thenReturn(product);
         when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
         when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+        when(productRepository.find(any(), any(), any())).thenReturn(page);
 
         doNothing().when(productRepository).deleteById(existingId);
         doThrow(EmptyResultDataAccessException.class).when(productRepository).deleteById(nonExistingId);
@@ -72,10 +71,10 @@ class ProductServiceTests {
     void findAllPagedShouldReturnPage() {
 
         Pageable pageable = PageRequest.of(0,10);
-        Page<ProductDto> result = productService.findAllPaged(pageable);
+        Page<ProductDto> result = productService.findAllPaged(0L, "", pageable);
 
         assertNotNull(result);
-        verify(productRepository).findAll(pageable);
+        verify(productRepository).find(any(), any(), any());
 
     }
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +26,11 @@ public class ProductService {
     ProductRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> findAllPaged(Pageable pageable) {
-        return repository.findAll(pageable).map(ProductDto::new);
+    public Page<ProductDto> findAllPaged(Long categoryId, String name, Pageable pageable) {
+        List<Category> cat = (categoryId == 0) ? null : List.of(new Category(categoryId, null));
+        Page<Product> products = repository.find(cat, name.trim(), pageable);
+        repository.findProductsWithCategory(products.getContent());
+        return products.map(product -> new ProductDto(product, product.getCategories()));
     }
 
     @Transactional(readOnly = true)

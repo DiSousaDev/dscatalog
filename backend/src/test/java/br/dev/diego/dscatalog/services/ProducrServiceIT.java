@@ -44,7 +44,7 @@ class ProducrServiceIT {
     void findAllPagedShouldReturnPageWhenPage0Size10() {
 
         Pageable pageable = PageRequest.of(0,10);
-        Page<ProductDto> result = service.findAllPaged(pageable);
+        Page<ProductDto> result = service.findAllPaged(0L, "", pageable);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -58,7 +58,7 @@ class ProducrServiceIT {
     void findAllPagedShouldReturnEmptyPageWhenPageDoesntExist() {
 
         Pageable pageable = PageRequest.of(50,10);
-        Page<ProductDto> result = service.findAllPaged(pageable);
+        Page<ProductDto> result = service.findAllPaged(0L, "", pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -69,7 +69,7 @@ class ProducrServiceIT {
     void findAllPagedShouldReturnSortedPageWhenSortByName() {
 
         Pageable pageable = PageRequest.of(0,10, Sort.by("name"));
-        Page<ProductDto> result = service.findAllPaged(pageable);
+        Page<ProductDto> result = service.findAllPaged(0L, "", pageable);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
