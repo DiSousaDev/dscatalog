@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ReactComponent as ArrowIcon } from '../../assets/images/arrow.svg'
 import ProductPrice from '../../components/ProductPrice';
 
@@ -7,10 +8,12 @@ const ProductDetails = () => {
     return (
         <div className='product-detail-container'>
             <div className='product-detail-card base-card'>
-                <div className='goback-container'>
-                    <ArrowIcon />
-                    <h2>VOLTAR</h2>
-                </div>
+                <Link to={'/products'}>
+                    <div className='goback-container'>
+                        <ArrowIcon />
+                        <h2>VOLTAR</h2>
+                    </div>
+                </Link>
                 <div className='row'>
                     <div className='col-xl-6'>
                         <div className='img-container'>
