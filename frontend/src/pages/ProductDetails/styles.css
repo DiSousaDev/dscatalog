@@ -23,8 +23,6 @@
 
 .goback-container svg {
     margin-left: 5px;
-    transform: rotate(-180deg);
-    color: #407BFF;
 }
 
 .img-container {

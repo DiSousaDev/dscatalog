@@ -10,7 +10,7 @@ const ProductDetails = () => {
             <div className='product-detail-card base-card'>
                 <Link to={'/products'}>
                     <div className='goback-container'>
-                        <ArrowIcon />
+                        <ArrowIcon className='left-arrow' />
                         <h2>VOLTAR</h2>
                     </div>
                 </Link>
