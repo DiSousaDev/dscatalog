@@ -24,7 +24,7 @@ const ProductDetails = () => {
                     <div className='col-xl-6'>
                         <div className='description-container'>
                             <h2>Descrição do produto</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. In dolor architecto consequuntur, repudiandae, explicabo cupiditate, voluptas atque nesciunt debitis molestiae fugiat quisquam iusto facere eaque quis. A, nisi! Temporibus possimus nihil nam ipsam incidunt alias voluptatibus qui tempore ea nemo neque fuga libero eos dolorum, maxime saepe dolorem ex natus.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur.</p>
                         </div>
                     </div>
                 </div>
