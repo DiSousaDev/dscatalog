@@ -1,6 +1,6 @@
 import './styles.css'
 
-import ArrowIcon from '../../assets/images/arrow.svg'
+import { ReactComponent as ArrowIcon } from '../../assets/images/arrow.svg'
 
 type Props = {
     buttonTitle: string;
@@ -13,7 +13,7 @@ const ButtonIcon = ( { buttonTitle }: Props ) => {
                 <h6>{buttonTitle}</h6>
             </button>
             <div className='btn-icon-container'>
-                <img src={ArrowIcon} alt='seta' />
+                <ArrowIcon />
             </div>
         </div>
     )

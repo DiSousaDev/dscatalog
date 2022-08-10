@@ -22,6 +22,10 @@
     background-color: #33569B;
 }
 
+.btn-icon-container svg {
+    color: #fff;
+}
+
 @media (min-width: 576px) {
     .btn-icon-container {
         width: 70px;
