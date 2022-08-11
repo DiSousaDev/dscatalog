@@ -34,3 +34,32 @@ p {
     background: rgba(64, 123, 255, 0.3);
     color: #407bff;
 }
+
+@media (min-width: 768px) {
+    .admin-nav-item {
+        width: 220px;
+    }
+}
+
+@media (min-width: 1200px) {
+    ul {
+        justify-content: unsafe;
+        flex-direction: column;
+    }
+
+    .admin-nav-container {
+        width: 300px;
+        height: calc(100vh - 70px);
+        padding: 0px;
+    }
+
+    .admin-nav-item {
+        height: 80px;
+        border-radius: 0;
+        font-size: 18px;
+        background-color: #FFF;
+        border-bottom: 1px solid #E1E1E1;
+        justify-content: start;
+        padding-left: 40px;
+    }
+}
