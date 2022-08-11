@@ -1,20 +1,29 @@
-import './assets/styles/custom.scss';
-import './App.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Catalog from './pages/Catalog';
 import Admin from './pages/Admin';
+import AdminCrud from './pages/Admin/AdminCrud';
+import CategoryCrud from './pages/Admin/CategoryCrud';
+import ProductCrud from './pages/Admin/ProductCrud';
+import Catalog from './pages/Catalog';
+import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails';
+
+import './assets/styles/custom.scss';
+import './App.css';
 
 const App = () => (
   <BrowserRouter>
     <Navbar />
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/products" element={<Catalog />} />
-      <Route path="/products/:productId" element={<ProductDetails />} />
-      <Route path="/admin" element={<Admin />} />
+      <Route path="products" element={<Catalog />} />
+      <Route path="products/:productId" element={<ProductDetails />} />
+      <Route path="admin" element={<Navigate replace to="/admin/products" />} />
+      <Route path="admin" element={<Admin />}>
+        <Route path="products" element={<ProductCrud />} />
+        <Route path="categories" element={<CategoryCrud />} />
+        <Route path="admin" element={<AdminCrud />} />
+      </Route>
     </Routes>
   </BrowserRouter>
 )

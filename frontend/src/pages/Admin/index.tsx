@@ -1,4 +1,5 @@
 import Navbar from './Navbar'
+import { Outlet } from 'react-router-dom'
 import './styles.css'
 
 const Admin = () => {
@@ -6,7 +7,7 @@ const Admin = () => {
         <div className="admin-container">
             <Navbar />
             <div className='admin-content'>
-                <h1>Conteudo</h1>
+                <Outlet />
             </div>
         </div>
     )
