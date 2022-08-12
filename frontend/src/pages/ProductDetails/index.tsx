@@ -6,6 +6,8 @@ import { Product } from '../../types/product';
 
 import './styles.css';
 import api from '../../util/requests';
+import ProductInfoLoader from './ProductInfoLoader';
+import ProductDescriptionLoader from './ProductDescriptionLoader';
 
 type UrlParams = {
     productId: string;
@@ -14,10 +16,12 @@ type UrlParams = {
 const ProductDetails = () => {
 
     const { productId } = useParams<UrlParams>();
-
-    const[product, setProduct] = useState<Product>();
+    const [product, setProduct] = useState<Product>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
+
+        setIsLoading(true);
         api
             .get(`/products/${productId}`)
             .then(response => {
@@ -25,6 +29,9 @@ const ProductDetails = () => {
             })
             .catch((err) => {
                 console.log("Erro ao buscar produto", err)
+            })
+            .finally(() => {
+                setIsLoading(false);
             })
     }, [productId])
 
@@ -39,19 +46,25 @@ const ProductDetails = () => {
                 </Link>
                 <div className='row'>
                     <div className='col-xl-6'>
-                        <div className='img-container'>
-                            <img src={product?.imgUrl} alt='tenis' />
-                        </div>
-                        <div className='name-price-container'>
-                            <h1>{product?.name}</h1>
-                            { product && <ProductPrice price={product?.price} />}
-                        </div>
+                        {isLoading ? <ProductInfoLoader /> :
+                            <>
+                                <div className='img-container'>
+                                    <img src={product?.imgUrl} alt='tenis' />
+                                </div>
+                                <div className='name-price-container'>
+                                    <h1>{product?.name}</h1>
+                                    {product && <ProductPrice price={product?.price} />}
+                                </div>
+                            </>
+                        }
                     </div>
                     <div className='col-xl-6'>
-                        <div className='description-container'>
-                            <h2>Descrição do produto</h2>
-                            <p>{product?.description}</p>
-                        </div>
+                        {isLoading ? <ProductDescriptionLoader /> :
+                            <div className='description-container'>
+                                <h2>Descrição do produto</h2>
+                                <p>{product?.description}</p>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

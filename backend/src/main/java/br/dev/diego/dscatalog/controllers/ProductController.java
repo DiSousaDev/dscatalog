@@ -30,7 +30,7 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Page<ProductDto>> findAll(
+    public ResponseEntity<Page<ProductDto>> findAll (
             @RequestParam(defaultValue = "0") Long categoryId,
             @RequestParam(defaultValue = "") String name,
             Pageable pageable
@@ -41,7 +41,8 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductDto> findById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> findById(@PathVariable Long id) throws InterruptedException {
+        Thread.sleep(5000);
         ProductDto obj = productService.findById(id);
         return ResponseEntity.ok().body(obj);
     }
