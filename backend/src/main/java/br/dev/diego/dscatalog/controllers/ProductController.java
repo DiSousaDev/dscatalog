@@ -34,8 +34,9 @@ public class ProductController {
             @RequestParam(defaultValue = "0") Long categoryId,
             @RequestParam(defaultValue = "") String name,
             Pageable pageable
-    ) {
+    ) throws InterruptedException {
         Page<ProductDto> page = productService.findAllPaged(categoryId, name, pageable);
+        Thread.sleep(5000);
         return ResponseEntity.ok().body(page);
     }
 
