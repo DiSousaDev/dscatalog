@@ -10,6 +10,10 @@ import ProductDetails from './pages/ProductDetails';
 
 import './assets/styles/custom.scss';
 import './App.css';
+import Auth from './pages/Admin/Auth';
+import LoginCard from './pages/Admin/Auth/LoginCard';
+import SignupCard from './pages/Admin/Auth/SignupCard';
+import RecoverCard from './pages/Admin/Auth/RecoverCard';
 
 const App = () => (
   <BrowserRouter>
@@ -23,6 +27,12 @@ const App = () => (
         <Route path="products" element={<ProductCrud />} />
         <Route path="categories" element={<CategoryCrud />} />
         <Route path="admin" element={<AdminCrud />} />
+      </Route>
+      <Route path="admin/auth" element={<Navigate replace to="/admin/auth/login" />} />
+      <Route path="admin/auth" element={<Auth />}>
+        <Route path="login" element={<LoginCard />} />
+        <Route path="signup" element={<SignupCard />} />
+        <Route path="recover" element={<RecoverCard />} />
       </Route>
     </Routes>
   </BrowserRouter>
