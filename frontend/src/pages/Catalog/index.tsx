@@ -4,10 +4,10 @@ import Pagination from '../../components/Pagination'
 import ProductCard from '../../components/ProductCard'
 import { Product } from '../../types/product'
 import { SpringPage } from '../../types/vendor/spring'
-import { AxiosParams } from '../../types/vendor/axios'
 import api from '../../util/requests'
 import './styles.css'
 import CardLoader from './CardLoader'
+import { AxiosRequestConfig } from 'axios'
 
 const Catalog = () => {
 
@@ -16,7 +16,7 @@ const Catalog = () => {
 
     useEffect(() => {
 
-        const params: AxiosParams = {
+        const params: AxiosRequestConfig = {
             method: 'GET',
             url: '/products',
             params: {
