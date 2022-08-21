@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import jwtDecode from 'jwt-decode';
 import qs from 'qs';
 import history from './history';
 
@@ -49,6 +50,14 @@ export const requestBackend = (config : AxiosRequestConfig) => {
   return api( {...config, headers} );
 }
 
+type Role = 'ROLE_OPERATOR' | 'ROLE_ADMIN';
+
+type TokenData = {
+  exp: number;
+  user_name: string;
+  authorities: Role[];
+}
+
 type LoginResponse = {
   access_token: string;
   token_type: string;
@@ -71,4 +80,18 @@ export const saveAuthData = (obj : LoginResponse) => {
 export const getAuthData = () => {
   const str = localStorage.getItem(TOKEN_KEY) ?? '{}';
   return JSON.parse(str) as LoginResponse;
+}
+
+export const getTokenData = () : TokenData | undefined => {
+  try {
+    return jwtDecode(getAuthData().access_token) as TokenData;
+  }
+  catch(error) {
+    return undefined;
+  }
+}
+
+export const isAuthenticated = () : boolean => {
+  const tokenData = getTokenData();
+  return (tokenData && tokenData.exp * 1000 > Date.now()) ? true : false;
 }
