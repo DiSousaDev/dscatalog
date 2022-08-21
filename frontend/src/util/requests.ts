@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 
 const api = axios.create({
@@ -30,15 +30,22 @@ export const requestBackendLogin = (loginData: LoginData) => {
     'Content-Type': 'application/x-www-form-urlencoded',
     Authorization: 'Basic ' + btoa(CLIENT_ID + ':' + CLIENT_SECRET),
   };
-
   const data = qs.stringify({
     ...loginData,
     grant_type: 'password'
   });
-
   return api.post('/oauth/token', data, { headers });
-
 };
+
+export const requestBackend = (config : AxiosRequestConfig) => {
+
+  const headers = config.withCredentials ? {
+    ...config.headers,
+    Authorization: 'Bearer ' + getAuthData().access_token,
+  } : config.headers;
+
+  return api( {...config, headers} );
+}
 
 export const saveAuthData = (obj : LoginResponse) => {
   localStorage.setItem(TOKEN_KEY, JSON.stringify(obj));

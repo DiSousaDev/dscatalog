@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Admin from './pages/Admin';
-import AdminCrud from './pages/Admin/AdminCrud';
 import CategoryCrud from './pages/Admin/CategoryCrud';
 import ProductCrud from './pages/Admin/ProductCrud';
 import Catalog from './pages/Catalog';
@@ -14,6 +13,7 @@ import Auth from './pages/Admin/Auth';
 import LoginCard from './pages/Admin/Auth/LoginCard';
 import SignupCard from './pages/Admin/Auth/SignupCard';
 import RecoverCard from './pages/Admin/Auth/RecoverCard';
+import UserCrud from './pages/Admin/UserCrud';
 
 const App = () => (
   <BrowserRouter>
@@ -26,7 +26,7 @@ const App = () => (
       <Route path="admin" element={<Admin />}>
         <Route path="products" element={<ProductCrud />} />
         <Route path="categories" element={<CategoryCrud />} />
-        <Route path="admin" element={<AdminCrud />} />
+        <Route path="users" element={<UserCrud />} />
       </Route>
       <Route path="admin/auth" element={<Navigate replace to="/admin/auth/login" />} />
       <Route path="admin/auth" element={<Auth />}>

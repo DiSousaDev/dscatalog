@@ -4,7 +4,7 @@ import Pagination from '../../components/Pagination'
 import ProductCard from '../../components/ProductCard'
 import { Product } from '../../types/product'
 import { SpringPage } from '../../types/vendor/spring'
-import api from '../../util/requests'
+import api, { requestBackend } from '../../util/requests'
 import './styles.css'
 import CardLoader from './CardLoader'
 import { AxiosRequestConfig } from 'axios'
@@ -26,7 +26,7 @@ const Catalog = () => {
         }
 
         setIsLoading(true);
-        api(params)
+        requestBackend(params)
             .then(response => {
                 setPage(response.data);
             })
