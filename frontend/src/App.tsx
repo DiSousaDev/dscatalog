@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { unstable_HistoryRouter as HistoryRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Admin from './pages/Admin';
 import CategoryCrud from './pages/Admin/CategoryCrud';
@@ -14,9 +14,10 @@ import LoginCard from './pages/Admin/Auth/LoginCard';
 import SignupCard from './pages/Admin/Auth/SignupCard';
 import RecoverCard from './pages/Admin/Auth/RecoverCard';
 import UserCrud from './pages/Admin/UserCrud';
+import history from './util/history';
 
 const App = () => (
-  <BrowserRouter>
+  <HistoryRouter history={history}>
     <Navbar />
     <Routes>
       <Route path="/" element={<Home />} />
@@ -35,7 +36,7 @@ const App = () => (
         <Route path="recover" element={<RecoverCard />} />
       </Route>
     </Routes>
-  </BrowserRouter>
+  </HistoryRouter>
 )
 
 export default App
