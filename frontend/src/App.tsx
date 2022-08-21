@@ -15,6 +15,7 @@ import SignupCard from './pages/Admin/Auth/SignupCard';
 import RecoverCard from './pages/Admin/Auth/RecoverCard';
 import UserCrud from './pages/Admin/UserCrud';
 import history from './util/history';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = () => (
   <HistoryRouter history={history}>
@@ -25,9 +26,9 @@ const App = () => (
       <Route path="products/:productId" element={<ProductDetails />} />
       <Route path="admin" element={<Navigate replace to="/admin/products" />} />
       <Route path="admin" element={<Admin />}>
-        <Route path="products" element={<ProductCrud />} />
-        <Route path="categories" element={<CategoryCrud />} />
-        <Route path="users" element={<UserCrud />} />
+        <Route path="products" element={<PrivateRoute><ProductCrud /></PrivateRoute>}/>
+        <Route path="categories" element={<PrivateRoute><CategoryCrud /></PrivateRoute>}/>
+        <Route path="users" element={<PrivateRoute><UserCrud /></PrivateRoute>}/>
       </Route>
       <Route path="admin/auth" element={<Navigate replace to="/admin/auth/login" />} />
       <Route path="admin/auth" element={<Auth />}>
