@@ -1,8 +1,10 @@
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../../AuthContext';
 import ButtonIcon from '../../../../components/ButtonIcon';
-import { getAuthData, requestBackendLogin, saveAuthData } from '../../../../util/requests';
+import { getTokenData, requestBackendLogin, saveAuthData } from '../../../../util/requests';
 import './styles.css'
 
 type FormData = {
@@ -12,6 +14,8 @@ type FormData = {
 
 const LoginCard = () => {
 
+    const { setAuthContextData } = useContext(AuthContext);
+
     const { register, handleSubmit, formState: {errors} } = useForm<FormData>();
 
     const navigate = useNavigate();
@@ -20,10 +24,11 @@ const LoginCard = () => {
         requestBackendLogin(formData)
             .then(response => {
                 saveAuthData(response.data);
-                const token = getAuthData().access_token;
-                console.log('TOKEN', token);
-                console.log('SUCESSO', response);
                 navigate('/admin');
+                setAuthContextData({
+                    authenticated: true,
+                    tokenData: getTokenData()
+                })
             })
             .catch(err => {
                 console.log('ERRO', err);

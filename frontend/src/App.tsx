@@ -16,28 +16,37 @@ import RecoverCard from './pages/Admin/Auth/RecoverCard';
 import UserCrud from './pages/Admin/UserCrud';
 import history from './util/history';
 import PrivateRoute from './components/PrivateRoute';
+import { useState } from 'react';
+import { AuthContext, AuthContextData } from './AuthContext';
 
-const App = () => (
-  <HistoryRouter history={history}>
-    <Navbar />
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="products" element={<Catalog />} />
-      <Route path="products/:productId" element={<ProductDetails />} />
-      <Route path="admin" element={<Navigate replace to="/admin/products" />} />
-      <Route path="admin" element={<Admin />}>
-        <Route path="products" element={<PrivateRoute><ProductCrud /></PrivateRoute>}/>
-        <Route path="categories" element={<PrivateRoute><CategoryCrud /></PrivateRoute>}/>
-        <Route path="users" element={<PrivateRoute><UserCrud /></PrivateRoute>}/>
-      </Route>
-      <Route path="admin/auth" element={<Navigate replace to="/admin/auth/login" />} />
-      <Route path="admin/auth" element={<Auth />}>
-        <Route path="login" element={<LoginCard />} />
-        <Route path="signup" element={<SignupCard />} />
-        <Route path="recover" element={<RecoverCard />} />
-      </Route>
-    </Routes>
-  </HistoryRouter>
-)
+const App = () => {
+  const [authContextData, setAuthContextData] = useState<AuthContextData>({
+    authenticated: false
+  });
+  return (
+    <AuthContext.Provider value={ {authContextData, setAuthContextData} }>
+      <HistoryRouter history={history}>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="products" element={<Catalog />} />
+          <Route path="products/:productId" element={<ProductDetails />} />
+          <Route path="admin" element={<Navigate replace to="/admin/products" />} />
+          <Route path="admin" element={<Admin />}>
+            <Route path="products" element={<PrivateRoute><ProductCrud /></PrivateRoute>} />
+            <Route path="categories" element={<PrivateRoute><CategoryCrud /></PrivateRoute>} />
+            <Route path="users" element={<PrivateRoute><UserCrud /></PrivateRoute>} />
+          </Route>
+          <Route path="admin/auth" element={<Navigate replace to="/admin/auth/login" />} />
+          <Route path="admin/auth" element={<Auth />}>
+            <Route path="login" element={<LoginCard />} />
+            <Route path="signup" element={<SignupCard />} />
+            <Route path="recover" element={<RecoverCard />} />
+          </Route>
+        </Routes>
+      </HistoryRouter>
+    </AuthContext.Provider>
+  );
+}
 
 export default App
