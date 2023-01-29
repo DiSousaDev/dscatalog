@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CategoryService {
 
+    public static final String ENTITY = " entity: ";
     @Autowired
     CategoryRepository repository;
 
@@ -47,16 +48,16 @@ public class CategoryService {
         try{
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new DataNotFoundException("Categoria não encontrada id: " + id + " entity: " + Category.class.getName());
+            throw new DataNotFoundException("Categoria não encontrada id: " + id + ENTITY + Category.class.getName());
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Impossivel excluir. Possui entidades relacionadas id: " + id + " entity: " + Category.class.getName());
+            throw new DatabaseException("Impossivel excluir. Possui entidades relacionadas id: " + id + ENTITY + Category.class.getName());
         }
 
     }
 
     private Category findCategoryById(Long id) {
         return repository.findById(id).orElseThrow(() -> new DataNotFoundException(
-                "Categoria não encontrada id: " + id + " entity: " + Category.class.getName()));
+                "Categoria não encontrada id: " + id + ENTITY + Category.class.getName()));
     }
 
     private void updateCategory(Category cat, CategoryUpdateDto catUpdate) {

@@ -6,8 +6,8 @@ import br.dev.diego.dscatalog.entities.User;
 import br.dev.diego.dscatalog.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

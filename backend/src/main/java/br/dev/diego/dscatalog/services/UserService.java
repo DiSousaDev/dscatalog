@@ -27,6 +27,7 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
 
+    public static final String ENTITY = " entity: ";
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
@@ -80,16 +81,16 @@ public class UserService implements UserDetailsService {
         try{
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new DataNotFoundException("Usuário não encontrado id: " + id + " entity: " + User.class.getName());
+            throw new DataNotFoundException("Usuário não encontrado id: " + id + ENTITY + User.class.getName());
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Impossivel excluir. Possui entidades relacionadas id: " + id + " entity: " + User.class.getName());
+            throw new DatabaseException("Impossivel excluir. Possui entidades relacionadas id: " + id + ENTITY + User.class.getName());
         }
 
     }
 
     private User findUserById(Long id) {
         return repository.findById(id).orElseThrow(() -> new DataNotFoundException(
-                "Usuario não encontrado id: " + id + " entity: " + User.class.getName()));
+                "Usuario não encontrado id: " + id + ENTITY + User.class.getName()));
     }
 
     private void copyDtoToEntity(UserDto userDto, User user) {
@@ -98,7 +99,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(userDto.getEmail());
 
         user.getRoles().clear();
-        userDto.getRoles().forEach(role -> user.getRoles().add(roleRepository.getById(role.getId())));
+        userDto.getRoles().forEach(role -> user.getRoles().add(roleRepository.getReferenceById(role.getId())));
 
         if(userDto instanceof UserInsertDto) {
             user.setPassword(passwordEncoder.encode(((UserInsertDto) userDto).getPassword()));

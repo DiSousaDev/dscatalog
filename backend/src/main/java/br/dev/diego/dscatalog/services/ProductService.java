@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
+    public static final String ENTITY = " entity: ";
     @Autowired
     ProductRepository repository;
 
@@ -57,16 +58,16 @@ public class ProductService {
         try{
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new DataNotFoundException("Produto não encontrado id: " + id + " entity: " + Product.class.getName());
+            throw new DataNotFoundException("Produto não encontrado id: " + id + ENTITY + Product.class.getName());
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Impossivel excluir. Possui entidades relacionadas id: " + id + " entity: " + Product.class.getName());
+            throw new DatabaseException("Impossivel excluir. Possui entidades relacionadas id: " + id + ENTITY + Product.class.getName());
         }
 
     }
 
     private Product findProductById(Long id) {
         return repository.findById(id).orElseThrow(() -> new DataNotFoundException(
-                "Produto não encontrado id: " + id + " entity: " + Product.class.getName()));
+                "Produto não encontrado id: " + id + ENTITY + Product.class.getName()));
     }
 
     private void copyDtoToEntity(ProductDto productDto, Product product) {
